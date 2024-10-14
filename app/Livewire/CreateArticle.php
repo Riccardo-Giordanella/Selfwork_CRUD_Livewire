@@ -4,10 +4,13 @@ namespace App\Livewire;
 
 use App\Models\Article;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 
 class CreateArticle extends Component
 {
+    use WithFileUploads;
+
     #[Validate('required', message: 'Il campo titolo è obbligatorio')]
     #[Validate('min:3', message: 'Il campo titolo deve contenere almeno 3 caratteri')]
     public $title;
@@ -20,26 +23,29 @@ class CreateArticle extends Component
     #[Validate('min:3', message: 'Il campo corpo deve contenere almeno 3 caratteri')]
     public $body;
 
+    public $img;
+
     public function store()
     {
         $this->validate();
 
+        if ($this->img) {
+            $imgPath = $this->img->store('images', 'public');
+        } else {
+            $imgPath = null;
+        }
+
         Article::create([
             'title' => $this->title,
             'subtitle' => $this->subtitle,
-            'body' => $this->body
+            'body' => $this->body,
+            'img' => $imgPath
         ]);
 
         // $this->clearForm();
         $this->reset();
 
         session()->flash('message', 'Articolo creato con successo');
-    }
-
-    protected function clearForm(){
-        $this->title = "";
-        $this->subtitle = "";
-        $this->body = "";
     }
 
     public function render()

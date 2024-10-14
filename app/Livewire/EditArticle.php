@@ -4,10 +4,12 @@ namespace App\Livewire;
 
 use App\Models\Article;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 
 class EditArticle extends Component
 {
+    use WithFileUploads;
 
     #[Validate('required', message: 'Il campo titolo è obbligatorio')]
     #[Validate('min:3', message: 'Il campo titolo deve contenere almeno 3 caratteri')]
@@ -21,33 +23,37 @@ class EditArticle extends Component
     #[Validate('min:3', message: 'Il campo corpo deve contenere almeno 3 caratteri')]
     public $body;
 
+    public $img;
+    public $newimg;
+
     public $article;
 
-    public function mount()
+    public function mount(Article $article)
     {
         $this->title = $this->article->title;
         $this->subtitle = $this->article->subtitle;
         $this->body = $this->article->body;
+        $this->img = $this->article->img;
     }
 
     public function updateArticle()
     {
         $this->validate();
 
-        // Article::create([
-        //     'title' => $this->title,
-        //     'subtitle' => $this->subtitle,
-        //     'body' => $this->body
-        // ]);
+        if ($this->newimg) {
+            $imagePath = $this->newimg->store('images', 'public');
+        } else {
+            $imagePath = $this->img;
+        }
+
         $this->article->update([
             'title' => $this->title,
             'subtitle' => $this->subtitle,
-            'body' => $this->body
+            'body' => $this->body,
+            'img' => $imagePath
         ]);
 
-        // $this->clearForm();
         $this->reset();
-
         session()->flash('message', 'Articolo aggiornato con successo');
     }
 
