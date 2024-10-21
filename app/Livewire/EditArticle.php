@@ -25,15 +25,14 @@ class EditArticle extends Component
 
     public $img;
     public $newimg;
-
     public $article;
-
     public function mount(Article $article)
     {
-        $this->title = $this->article->title;
-        $this->subtitle = $this->article->subtitle;
-        $this->body = $this->article->body;
-        $this->img = $this->article->img;
+        $this->article = $article;
+        $this->title = $article->title;
+        $this->subtitle = $article->subtitle;
+        $this->body = $article->body;
+        $this->img = $article->img;
     }
 
     public function updateArticle()
@@ -53,7 +52,6 @@ class EditArticle extends Component
             'img' => $imagePath
         ]);
 
-        $this->reset();
         session()->flash('message', 'Articolo aggiornato con successo');
     }
 

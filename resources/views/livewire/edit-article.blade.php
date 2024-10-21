@@ -26,7 +26,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="img" class="form-label">Immagine dell'articolo</label>
-                            <input type="file" wire:model="img" class="form-control">
+                            <input type="file" wire:model="newimg" class="form-control">
                             <div class="bg-danger rounded text-center my-1">@error('img') {{ $message }} @enderror</div>
                         </div>
                         <div class="mb-3">
